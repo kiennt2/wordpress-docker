@@ -64,6 +64,14 @@ bash ./deployment/local/one-time-setup.sh
 bash ./deployment/cloud/one-time-setup.sh
 ```
 
+### NOTE
+
+You should run the one-time setup script only once, it will set up the initial environment and create necessary files
+and directories.
+
+Whenever you want to start or stop the containers, just navigate to the root project directory and run docker
+commands, e.g.: ```docker compose up -d``` or ```docker compose down```.
+
 # Backup Jobs
 
 Depend on your needs, you can set up cron jobs for backup operations. Make sure cron is installed on your system.
