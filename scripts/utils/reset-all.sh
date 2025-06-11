@@ -40,7 +40,7 @@ sudo rm -rf "$ROOT_DIR"/backups
 sudo rm -rf "$ROOT_DIR"/snapshot
 sudo rm -rf "$ROOT_DIR"/source
 sudo rm -rf "$ROOT_DIR"/data
-sudo rm "$ROOT_DIR"/nginx-conf/nginx.conf
+sudo rm "$ROOT_DIR"/conf/nginx/nginx.conf
 sudo rm "$ROOT_DIR"/.env
 echo ""
 echo ">>> CREATE EMPTY DIRs"

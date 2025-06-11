@@ -10,8 +10,8 @@ if [ -z "$WEB_DOMAIN" ]; then
     echo ""
     exit 1
 fi
-NGINX_CONF_TEMPLATE="${ROOT_DIR}/nginx-conf/nginx-none-ssl.conf.template"
-NGINX_CONF="${ROOT_DIR}/nginx-conf/nginx.conf"
+NGINX_CONF_TEMPLATE="${ROOT_DIR}/conf/nginx/nginx-none-ssl.conf.template"
+NGINX_CONF="${ROOT_DIR}/conf/nginx/nginx.conf"
 cp -f "$NGINX_CONF_TEMPLATE" "$NGINX_CONF"
 
 # Detect OS for sed compatibility

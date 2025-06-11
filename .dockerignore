@@ -7,5 +7,5 @@ docker-compose.yml
 **/.DS_Store
 data/
 backups/
-nginx-conf/
+conf/
 snapshot

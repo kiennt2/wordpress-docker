@@ -22,7 +22,7 @@ services:
     <<: *wp-vars
     volumes:
       - ./source:/var/www/html
-      - ./php-conf/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./conf/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
 
   wordpress-cli:
     depends_on:
@@ -52,7 +52,7 @@ services:
       - "443:443"
     volumes:
       - ./source:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
+      - ./conf/nginx:/etc/nginx/conf.d
       - ./data/certbot:/etc/letsencrypt
       - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
       - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
@@ -72,7 +72,7 @@ services:
     command: certonly --webroot --webroot-path=/var/www/html --email admin@${WEB_DOMAIN} --agree-tos --no-eff-email --force-renewal -d ${WEB_DOMAIN}
 
   db:
-    image: mysql:8.0
+    image: mysql:8.4.5
     container_name: db
     restart: unless-stopped
 
@@ -86,7 +86,7 @@ services:
       - app-network
 
   redis-cache:
-    image: redis
+    image: redis:latest
     container_name: redis-cache
     restart: always
     volumes:
