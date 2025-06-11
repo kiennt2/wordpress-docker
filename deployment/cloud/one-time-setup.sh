@@ -52,6 +52,8 @@ COMPOSE_NOW() {
 echo ""
 source "$ROOT_DIR"/deployment/share/load-env.sh
 echo ""
+source "$ROOT_DIR"/deployment/share/validate-env.sh
+echo ""
 source "$ROOT_DIR"/deployment/share/nginx-none-ssl.sh
 echo ""
 echo "=================================================="

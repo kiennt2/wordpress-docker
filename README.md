@@ -26,9 +26,9 @@ Support both development workflows and production deployments with minimal confi
 1. Clone the repository
 
     ```bash
-   git clone git@gitlab.grit.software:common/gritglobal-site.git
+   git clone git@github.com:kiennt2/wordpress-docker.git
    
-   cd gritglobal-site
+   cd wordpress-docker
    
    git config core.filemode false
     ```
@@ -75,11 +75,16 @@ Depend on your needs, you can set up cron jobs for backup operations. Make sure 
     ```
 
 2. If you prefer to save backup file to GIT & restore from GIT
-    ```bash
-    # Open crontab editor
-    crontab -e    
-    # Add this line to run backup-to-git.sh daily at 12:00 PM (noon) - OR select the time you want to run the backup
-    0 12 * * * bash /path/to/your-root-project/scripts/backup-to-git.sh > /dev/null 2>&1
+
+   First, remove ```source``` from the ```.gitignore``` file in the root project directory.
+
+   By default, we ignore all files in the `source` directory to prevent them from being committed to Git.
+
+   ```bash
+   # Open crontab editor
+   crontab -e    
+   # Add this line to run backup-to-git.sh daily at 12:00 PM (noon) - OR select the time you want to run the backup
+   0 12 * * * bash /path/to/your-root-project/scripts/backup-to-git.sh > /dev/null 2>&1
    ```
 
 The ```> /dev/null 2>&1``` will prevent logs to be saved. Change it to ```>> /path/to/your/logfile.log 2>&1``` if you
@@ -123,6 +128,17 @@ This will attempt to renew your SSL certificates on the first day of each month.
 they're close to expiration.
 
 Make sure to replace ```/path/to/your-root-project``` with the actual path to your project directory.
+
+# ModSecurity & Owasp CRS
+
+Configuration files for ModSecurity and Owasp CRS are located in the `mod-security/conf` directory and mounted to
+Docker. Feel free to apply your custom configurations.
+
+```bash
+   - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
+   - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
+   - ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
+```
 
 # Reset Everything
 

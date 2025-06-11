@@ -1,0 +1,11 @@
+.env
+.git
+.idea
+docker-compose.yml
+.dockerignore
+.DS_Store
+**/.DS_Store
+data/
+backups/
+nginx-conf/
+snapshot

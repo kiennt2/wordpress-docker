@@ -1,0 +1,8 @@
+.env
+.idea
+.DS_Store
+**/.DS_Store
+backups
+data/
+nginx-conf/nginx.conf
+source
