@@ -86,9 +86,9 @@ Depend on your needs, you can set up cron jobs for backup operations. Make sure 
 
 2. If you prefer to save backup file to GIT & restore from GIT
 
-   First, remove ```source``` from the ```.gitignore``` file in the root project directory.
+   First, remove ```source``` and ```snapshot/wordpress_db.sql``` from the ```.gitignore``` file in the root project directory.
 
-   By default, we ignore all files in the `source` directory to prevent them from being committed to Git.
+   By default, we ignore all files in the `source` directory and ```snapshot/wordpress_db.sql``` to prevent them from being committed to Git.
 
    ```bash
    # Open crontab editor

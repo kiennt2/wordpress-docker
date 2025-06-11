@@ -5,4 +5,8 @@
 backups
 data/
 nginx-conf/nginx.conf
+#
+# If you prefer to save backup file to GIT & restore from GIT
+# Comment the next 2 lines or remove them
 source
+snapshot/wordpress_db.sql
