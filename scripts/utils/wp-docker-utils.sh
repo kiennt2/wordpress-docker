@@ -10,3 +10,8 @@
 curl https://getcomposer.org/composer.phar --output composer
 chmod a+x composer
 mv composer /usr/local/bin/composer
+
+# Install PhpRedis
+apk add autoconf build-base
+yes '' | pecl install redis
+bash -c "echo extension=redis.so > /usr/local/etc/php/conf.d/redis.ini"
