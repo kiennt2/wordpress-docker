@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/kiennt2/wordpress-docker/refs/heads/master/banner.jpg)
+
 This repository contains a Docker-based WordPress deployment solution.
 
 It's designed to be production-ready with a focus on ease of installation and maintenance, includes well-documented
