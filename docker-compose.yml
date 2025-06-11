@@ -14,7 +14,9 @@ services:
     depends_on:
       - db
       - redis-cache
-    image: wordpress:6.8.1-fpm-alpine
+    build:
+      context: ./
+      dockerfile: Dockerfile
     container_name: wordpress
     restart: unless-stopped
     <<: *wp-vars
