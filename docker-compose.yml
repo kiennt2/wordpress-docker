@@ -1,0 +1,94 @@
+x-wp-vars: &wp-vars
+  env_file: .env
+  environment:
+    - WORDPRESS_DB_HOST=db:3306
+    - WORDPRESS_DB_USER=$MYSQL_USER
+    - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+    - WORDPRESS_TABLE_PREFIX=grit_wp_
+  volumes:
+    - ./source:/var/www/html
+  networks:
+    - app-network
+
+services:
+
+  wordpress:
+    depends_on:
+      - db
+      - redis-cache
+    image: wordpress:6.8.1-fpm-alpine
+    container_name: wordpress
+    restart: unless-stopped
+    <<: *wp-vars
+
+  wordpress-cli:
+    depends_on:
+      - wordpress
+      - db
+    image: wordpress:cli
+    container_name: wordpress-cli
+    user: "33:33"
+    <<: *wp-vars
+    working_dir: /var/www/html
+    tty: true
+    entrypoint: wp
+    command: "--info"
+
+  webserver:
+    depends_on:
+      - wordpress
+    build:
+      context: ./mod-security
+      dockerfile: Dockerfile
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./source:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - ./data/certbot:/etc/letsencrypt
+      - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
+      - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
+      - ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
+    networks:
+      - app-network
+
+  certbot:
+    depends_on:
+      - webserver
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./data/certbot:/etc/letsencrypt
+      - ./source:/var/www/html
+    env_file: .env
+    command: certonly --webroot --webroot-path=/var/www/html --email admin@${WEB_DOMAIN} --agree-tos --no-eff-email --force-renewal -d ${WEB_DOMAIN}
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: unless-stopped
+
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=wordpress
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app-network
+
+  redis-cache:
+    image: redis
+    container_name: redis-cache
+    restart: always
+    volumes:
+      - ./data/redis:/data
+    env_file: .env
+    entrypoint: redis-server --appendonly yes  --requirepass ${REDIS_PASSWORD}
+
+networks:
+  app-network:
+    driver: bridge

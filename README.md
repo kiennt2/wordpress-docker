@@ -1,0 +1,135 @@
+This repository contains a Docker-based WordPress deployment solution.
+
+It's designed to be production-ready with a focus on ease of installation and maintenance, includes well-documented
+installation instructions and utility scripts for common maintenance tasks.
+
+Support both development workflows and production deployments with minimal configuration required.
+
+# Key Features
+
+- [x] Complete Docker and Docker Compose setup for WordPress
+- [x] Production-ready configuration with Nginx and SSL support
+- [x] ModSecurity & Owasp CRS integration for enhanced security
+- [x] Redis caching (for future use)
+- [x] WordPress CLI integration for administrative tasks
+- [x] Comprehensive backup and restore functionality (both disk and Git-based)
+- [x] Automated SSL certificate renewal
+- [x] Separate deployment scripts for local development and cloud environments
+
+# Prerequisite
+
+* [Docker & Docker Compose](https://docs.docker.com/engine/install/)
+* [Linux-Postinstall - Run Docker without sudo](https://docs.docker.com/engine/install/linux-postinstall/)
+
+# Installation
+
+1. Clone the repository
+
+    ```bash
+   git clone git@gitlab.grit.software:common/gritglobal-site.git
+   
+   cd gritglobal-site
+   
+   git config core.filemode false
+    ```
+
+2. Create ```.env``` file
+
+    ```bash
+    cp .env.example .env
+    ```
+
+3. Edit the ```.env``` file to set your environment variables
+
+
+4. Set executable permissions for the scripts ( assuming you are in the root project directory ):
+
+    ```bash
+    chmod -R a+x ./scripts
+    chmod -R a+x ./deployment
+    ```
+   you may need to run the above command with `sudo` if you encounter permission issues.
+
+### Local Development
+
+```bash
+bash ./deployment/local/one-time-setup.sh
+```
+
+### Cloud Deployment
+
+```bash
+bash ./deployment/cloud/one-time-setup.sh
+```
+
+# Backup Jobs
+
+Depend on your needs, you can set up cron jobs for backup operations. Make sure cron is installed on your system.
+
+1. If you prefer to save backup file to DISK & restore from DISK
+    ```bash
+    # Open crontab editor
+    crontab -e    
+    # Add this line to run backup-to-disk.sh daily at 12:00 PM (noon) - OR select the time you want to run the backup
+    0 12 * * * bash /path/to/your-root-project/scripts/backup-to-disk.sh > /dev/null 2>&1    
+    ```
+
+2. If you prefer to save backup file to GIT & restore from GIT
+    ```bash
+    # Open crontab editor
+    crontab -e    
+    # Add this line to run backup-to-git.sh daily at 12:00 PM (noon) - OR select the time you want to run the backup
+    0 12 * * * bash /path/to/your-root-project/scripts/backup-to-git.sh > /dev/null 2>&1
+   ```
+
+The ```> /dev/null 2>&1``` will prevent logs to be saved. Change it to ```>> /path/to/your/logfile.log 2>&1``` if you
+want to save logs to a file.
+
+Make sure to replace ```/path/to/your-root-project``` with the actual full path to your project directory.
+
+# Restores
+
+1. If you choose DISK backup, you can restore from DISK by running:
+
+    ```bash
+    sudo bash /path/to/your-root-project/scripts/restore-from-disk.sh
+    ```    
+   Run the command above then select the backup file you want to restore from the list. By default, we save 14 days of
+   backups. You can change this in the `scripts/backup-to-disk.sh` file by modifying the `MAX_BACKUPS` variable.
+
+
+2. If you choose GIT backup, you can restore from GIT by running:
+
+    ```bash
+   sudo bash /path/to/your-root-project/scripts/restore-from-git.sh
+    ```
+   Run the command above then select the TAG NAME you want to restore from the list. You can select form list (default
+   latest 10 Tags ) or type the tag name you want to restore from.
+
+# Auto Renewal SSL
+
+SSL certificates from Let's Encrypt expire every 90 days. To ensure your certificates are always valid, you can set up
+an automatic renewal process:
+
+```bash
+# Open crontab editor
+crontab -e
+
+# Add this line to run the SSL renewal script monthly
+0 0 1 * * bash /path/to/your-root-project/scripts/utils/renew-ssl.sh > /dev/null 2>&1
+```
+
+This will attempt to renew your SSL certificates on the first day of each month. Certificates will only be renewed if
+they're close to expiration.
+
+Make sure to replace ```/path/to/your-root-project``` with the actual path to your project directory.
+
+# Reset Everything
+
+If you want to reset everything and start over, you can run the following command:
+
+```bash
+bash /path/to/your-root-project/scripts/utils/reset-all.sh
+```
+
+Make sure to replace ```/path/to/your-root-project``` with the actual path to your project directory.
