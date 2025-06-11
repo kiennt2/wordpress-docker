@@ -5,8 +5,6 @@ x-wp-vars: &wp-vars
     - WORDPRESS_DB_USER=$MYSQL_USER
     - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
     - WORDPRESS_TABLE_PREFIX=grit_wp_
-  volumes:
-    - ./source:/var/www/html
   networks:
     - app-network
 
@@ -20,6 +18,9 @@ services:
     container_name: wordpress
     restart: unless-stopped
     <<: *wp-vars
+    volumes:
+      - ./source:/var/www/html
+      - ./php-conf/custom.ini:/usr/local/etc/php/conf.d/custom.ini
 
   wordpress-cli:
     depends_on:
@@ -29,6 +30,8 @@ services:
     container_name: wordpress-cli
     user: "33:33"
     <<: *wp-vars
+    volumes:
+      - ./source:/var/www/html
     working_dir: /var/www/html
     tty: true
     entrypoint: wp
