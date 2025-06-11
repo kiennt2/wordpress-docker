@@ -49,8 +49,8 @@ Support both development workflows and production deployments with minimal confi
     ```bash
     chmod -R a+x ./scripts
     chmod -R a+x ./deployment
-    chmod -R a+x ./cli.sh
-    chmod -R a+x ./composer.sh
+    chmod a+x ./cli.sh
+    chmod a+x ./composer.sh
     ```
    you may need to run the above command with `sudo` if you encounter permission issues.
 
@@ -172,7 +172,7 @@ Docker. Feel free to apply your custom configurations.
     # bash ./composer.sh require humanmade/s3-uploads
 ```
 
-# Deal with permissions issues while developing
+# Deal with permissions issues
 
 ```bash
     bash ./fix_permissions_for_local_development.sh
