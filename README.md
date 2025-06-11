@@ -49,6 +49,8 @@ Support both development workflows and production deployments with minimal confi
     ```bash
     chmod -R a+x ./scripts
     chmod -R a+x ./deployment
+    chmod -R a+x ./cli.sh
+    chmod -R a+x ./composer.sh
     ```
    you may need to run the above command with `sudo` if you encounter permission issues.
 
@@ -86,9 +88,11 @@ Depend on your needs, you can set up cron jobs for backup operations. Make sure 
 
 2. If you prefer to save backup file to GIT & restore from GIT
 
-   First, remove ```source``` and ```snapshot/wordpress_db.sql``` from the ```.gitignore``` file in the root project directory.
+   First, remove ```source``` and ```snapshot/wordpress_db.sql``` from the ```.gitignore``` file in the root project
+   directory.
 
-   By default, we ignore all files in the `source` directory and ```snapshot/wordpress_db.sql``` to prevent them from being committed to Git.
+   By default, we ignore all files in the `source` directory and ```snapshot/wordpress_db.sql``` to prevent them from
+   being committed to Git.
 
    ```bash
    # Open crontab editor
@@ -148,6 +152,30 @@ Docker. Feel free to apply your custom configurations.
    - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
    - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
    - ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
+```
+
+# WordPress CLI
+
+```bash
+    ./cli.sh <command>
+    # OR
+    bash ./cli.sh <command>
+```
+
+# Composer CLI
+
+```bash
+    ./composer.sh <command>
+    # OR
+    bash ./composer.sh <command>
+    # e.g.
+    # bash ./composer.sh require humanmade/s3-uploads
+```
+
+# Deal with permissions issues while developing
+
+```bash
+    bash ./fix_permissions_for_local_development.sh
 ```
 
 # Reset Everything
