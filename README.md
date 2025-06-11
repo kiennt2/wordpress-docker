@@ -149,33 +149,33 @@ Configuration files for ModSecurity and Owasp CRS are located in the `mod-securi
 Docker. Feel free to apply your custom configurations.
 
 ```bash
-   - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
-   - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
-   - ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
+- ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
+- ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
+- ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
 ```
 
 # WordPress CLI
 
 ```bash
-    ./cli.sh <command>
-    # OR
-    bash ./cli.sh <command>
+./cli.sh <command>
+# OR
+bash ./cli.sh <command>
 ```
 
 # Composer CLI
 
 ```bash
-    ./composer.sh <command>
-    # OR
-    bash ./composer.sh <command>
-    # e.g.
-    # bash ./composer.sh require humanmade/s3-uploads
+./composer.sh <command>
+# OR
+bash ./composer.sh <command>
+# e.g.
+# bash ./composer.sh require humanmade/s3-uploads
 ```
 
 # Deal with permissions issues
 
 ```bash
-    bash ./fix_permissions_for_local_development.sh
+bash ./fix_permissions_for_local_development.sh
 ```
 
 # Reset Everything
