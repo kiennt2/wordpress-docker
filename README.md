@@ -28,7 +28,7 @@ Support both development workflows and production deployments with minimal confi
 1. Clone the repository
 
     ```bash
-   git clone git@github.com:kiennt2/wordpress-docker.git
+   git clone https://github.com/kiennt2/wordpress-docker.git
    
    cd wordpress-docker
    
