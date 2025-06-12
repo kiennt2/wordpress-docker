@@ -175,7 +175,7 @@ bash ./composer.sh <command>
 # Deal with permissions issues
 
 ```bash
-bash ./fix_permissions_for_local_development.sh
+bash ./fix_permissions.sh
 ```
 
 # Reset Everything
@@ -187,3 +187,103 @@ bash /path/to/your-root-project/scripts/utils/reset-all.sh
 ```
 
 Make sure to replace ```/path/to/your-root-project``` with the actual path to your project directory.
+
+----------------------------------------------------
+
+# Troubleshooting
+
+----------------------------------------------------
+
+> Unable to build for a platform ...
+
+The error usually means that the platform (CPU architecture) your Docker image is being built for doesn't match the
+platform of your host machine,
+or that the base image you're using doesn't support the target platform.
+This can happen when building for multiple architectures or when using base images that aren't available for all
+platforms.
+
+As you can see, we have 2 Dockerfiles inside the `mod-security` directory: `Dockerfile` and `amd64.Dockerfile`,
+
+`Dockerfile` is for ARM64 architecture (Apple Silicon, Raspberry Pi, etc.) and `amd64.Dockerfile` is for AMD64
+architecture (Intel/AMD processors).
+
+Choose the right Dockerfile to build your image in `docker-compose.yml` file:
+
+```bash
+  ...
+  webserver:
+    depends_on:
+      - wordpress
+    build:
+      context: ./mod-security
+      dockerfile: Dockerfile  # OR amd64.Dockerfile
+  ...
+```
+
+----------------------------------------------------
+
+> Plugin caching_sha2_password could not be loaded
+
+it usually happens when you import/export db via CLI, to fix it, you can run the following command:
+
+1. ```docker ps -a``` to get the container ID of the MySQL container
+2. ```docker exec -it <container_id> sh```
+3. ```mysql -u root -p```
+4. input your MySQL root password when prompted
+5. ```ALTER USER 'user_same_as_env'@'%' IDENTIFIED WITH mysql_native_password BY 'user_password_same_as_env';```
+
+----------------------------------------------------
+
+> failed to create network wordpress-docker_app-network: Error response from daemon: Failed to program NAT chain: COMMAND_FAILED
+
+I have encountered this issue when running Docker on a system with firewalld enabled (like AWS Linux 2).
+
+The error indicates that Docker is unable to create the necessary network due to firewall rules.
+
+Try this commands to fix the issue:
+
+```bash
+sudo firewall-cmd --permanent --zone=trusted --add-interface=docker0
+sudo firewall-cmd --reload
+docker compose up -d
+```
+
+NOTE: whenever you stop the containers, you may need to run the above commands again to fix the issue.
+
+----------------------------------------------------
+
+> Deploy on AWS Linux 2 uses AMD64 architecture
+
+1. Install Docker
+
+   Follow the [official Docker installation guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html).
+   
+   Run docker commands without `sudo`:
+
+   ```bash
+   sudo usermod -a -G docker ec2-user
+   newgrp docker
+   ```
+
+2. Install Docker Compose
+
+   ```bash
+   sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
+    ```
+   
+3. Docker Build
+
+   You should use the `amd64.Dockerfile` to build the image for `webserver`. You should build the image on local machine:
+   then push it to a Docker registry (like Docker Hub or AWS ECR) and pull it on the AWS instance. 
+
+   Update the `docker-compose.yml` file to use the image from the registry, like this.
+
+   ```bash
+   ...
+   webserver:
+    depends_on:
+      - wordpress
+    image: mrkeyvn/wordpress-docker-webserver-amd64:latest
+    container_name: webserver
+   ...
+   ```
