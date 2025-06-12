@@ -273,7 +273,7 @@ NOTE: whenever you stop the containers, you may need to run the above commands a
    
 3. Docker Build
 
-   You should use the `amd64.Dockerfile` to build the image for `webserver`. You should build the image on local machine:
+   You should use the `amd64.Dockerfile` to build the image for `webserver`. You should build the image on your local machine,
    then push it to a Docker registry (like Docker Hub or AWS ECR) and pull it on the AWS instance. 
 
    Update the `docker-compose.yml` file to use the image from the registry, like this.
