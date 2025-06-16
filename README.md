@@ -372,7 +372,40 @@ To migrate data from an existing WordPress installation to this Docker setup, yo
 9. Clean data & restart the Docker containers to apply the changes:
    ```bash
    # cd to root project directory
-   tm -rf ./tmp-source
+   rm -rf ./tmp-source
    docker compose down && docker compose up -d
    # Now this should be your new WordPress installation with all data migrated from the old one.
    ```
+
+# Data migration between Local and Cloud environments
+
+1. Use the `backup-to-disk.sh` script to create a backup of your WordPress site on the source environment (local or
+   cloud).
+
+   ```bash
+   # cd to root project directory
+   bash ./scripts/backup-to-disk.sh
+   ```
+   
+   copy backup files to the target environment (local or cloud) using `scp` or any other file transfer method.
+
+   run the `restore-from-disk.sh` script on the target environment to restore the backup.
+
+   ```bash
+   bash ./scripts/restore-from-disk.sh
+   ```
+   
+2. Use the `backup-to-git.sh` script to create a Git Tag of your WordPress site on the source environment (local or
+   cloud).
+
+   ```bash
+   bash ./scripts/backup-to-git.sh
+   ```
+
+   On the target environment, run the `restore-from-git.sh` script to restore form the Git Tag.
+
+   ```bash
+   bash ./scripts/restore-from-git.sh
+   ```
+   
+   NOTE: make sure to remove the `source` and `snapshot` directory from the `.gitignore` file in the root
