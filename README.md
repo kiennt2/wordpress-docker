@@ -374,6 +374,7 @@ To transfer files & data from an existing WordPress installation to this Docker 
    # cd to root project directory
    rm -rf ./tmp-source
    docker compose down && docker compose up -d
+   bash ./fix_permissions.sh
    # Now this should be your new WordPress installation with all data migrated from the old one.
    ```
 
