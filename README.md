@@ -235,7 +235,8 @@ it usually happens when you import/export db via CLI, to fix it, you can run the
 
 ----------------------------------------------------
 
-> failed to create network wordpress-docker_app-network: Error response from daemon: Failed to program NAT chain: COMMAND_FAILED
+> failed to create network wordpress-docker_app-network: Error response from daemon: Failed to program NAT chain:
+> COMMAND_FAILED
 
 I have encountered this issue when running Docker on a system with firewalld enabled (like AWS Linux 2).
 
@@ -257,8 +258,9 @@ NOTE: whenever you stop the containers, you may need to run the above commands a
 
 1. Install Docker
 
-   Follow the [official Docker installation guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html).
-   
+   Follow
+   the [official Docker installation guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html).
+
    Run docker commands without `sudo`:
 
    ```bash
@@ -271,11 +273,12 @@ NOTE: whenever you stop the containers, you may need to run the above commands a
    ```bash
    sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
     ```
-   
+
 3. Docker Build
 
-   You should use the `amd64.Dockerfile` to build the image for `webserver`. You should build the image on your local machine,
-   then push it to a Docker registry (like Docker Hub or AWS ECR) and pull it on the AWS instance. 
+   You should use the `amd64.Dockerfile` to build the image for `webserver`. You should build the image on your local
+   machine,
+   then push it to a Docker registry (like Docker Hub or AWS ECR) and pull it on the AWS instance.
 
    Update the `docker-compose.yml` file to use the image from the registry, like this.
 
@@ -288,3 +291,22 @@ NOTE: whenever you stop the containers, you may need to run the above commands a
     container_name: webserver
    ...
    ```
+4. Run the one-time setup script
+
+   ```bash
+   sudo firewall-cmd --permanent --zone=trusted --add-interface=docker0
+   sudo firewall-cmd --reload
+   bash ./deployment/cloud/one-time-setup.sh
+   ```
+
+Whenever you encounter the error:
+> failed to create network wordpress-docker_app-network: Error response from daemon: Failed to program NAT chain:
+> COMMAND_FAILED
+
+just run the following commands to fix it:
+
+```bash
+sudo firewall-cmd --reload
+# cd to root project directory
+docker compose up -d
+```
