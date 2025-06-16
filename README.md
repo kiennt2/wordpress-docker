@@ -152,6 +152,7 @@ Docker. Feel free to apply your custom configurations.
 - ./mod-security/conf/modsecurity.conf:/etc/nginx/modsecurity.conf
 - ./mod-security/conf/owasp-crs/crs-setup.conf:/etc/nginx/owasp-crs/crs-setup.conf
 - ./mod-security/conf/owasp-crs/rules:/etc/nginx/owasp-crs/rules
+- ./mod-security/conf/owasp-crs/plugins:/etc/nginx/owasp-crs/plugins
 ```
 
 # WordPress CLI
