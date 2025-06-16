@@ -349,7 +349,12 @@ To migrate data from an existing WordPress installation to this Docker setup, yo
    This will ensure that the files in the `source` directory have the correct permissions to access & modify them.
 
 
-6. Import the Database: Use the WordPress CLI to import the SQL file into the MySQL container.
+6. Now you should open `tmp-source/wp-config.php` and `source/wp-config.php` to compare what is different
+
+   Move all variables & config manually from `tmp-source/wp-config.php` to `source/wp-config.php`.
+
+
+7. Import the Database: Use the WordPress CLI to import the SQL file into the MySQL container.
    ```bash
    # copy your SQL export file to the "source" directory
    # cd to root project directory
@@ -357,18 +362,14 @@ To migrate data from an existing WordPress installation to this Docker setup, yo
    # if you face the issue "Plugin caching_sha2_password could not be loaded", follow the instructions in the Troubleshooting section above to fix it.
    ```
 
-7. Remove all files & folder in the `source` directory except `wp-config.php`, just keep the `wp-config.php` file
+8. Remove all files & folder in the `source` directory except `wp-config.php`, just keep the `wp-config.php` file
 
-   Now you should open `tmp-source/wp-config.php` and `source/wp-config.php` to compare what is different
+   Remove the `tmp-source/wp-config.php` file.
 
-   Move all variables & config manually from `tmp-source/wp-config.php` to `source/wp-config.php`.
-
-   After that, you can remove the `tmp-source/wp-config.php` file.
-
-   Then copy all files & folders from `tmp-source` to `source` directory.
+   Copy all files & folders from `tmp-source` to `source` directory.
 
 
-8. Clean data & restart the Docker containers to apply the changes:
+9. Clean data & restart the Docker containers to apply the changes:
    ```bash
    # cd to root project directory
    tm -rf ./tmp-source
