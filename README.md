@@ -311,9 +311,9 @@ sudo firewall-cmd --reload
 docker compose up -d
 ```
 
-# Data Migration
+# Site Transfer
 
-To migrate data from an existing WordPress installation to this Docker setup, you can follow these steps:
+To transfer files & data from an existing WordPress installation to this Docker setup, you can follow these steps:
 
 1. **Export the Database**: Use the WordPress export tool ( like WordPress CLI ) or a plugin to export your existing
    database to an SQL file.
