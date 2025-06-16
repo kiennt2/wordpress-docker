@@ -310,3 +310,68 @@ sudo firewall-cmd --reload
 # cd to root project directory
 docker compose up -d
 ```
+
+# Data Migration
+
+To migrate data from an existing WordPress installation to this Docker setup, you can follow these steps:
+
+1. **Export the Database**: Use the WordPress export tool ( like WordPress CLI ) or a plugin to export your existing
+   database to an SQL file.
+2. **Copy the Files**: create the `tmp-source` directory in this project, copy your WordPress files ( themes, plugins,
+   uploads, etc ... ) to the `tmp-source`.
+3. Create & update `.env` file with the correct database credentials and other environment variables.:
+   ```bash
+   ...
+   MYSQL_ROOT_PASSWORD=should_be_same_as_value_in_your_existing_wordpress
+   MYSQL_USER=should_be_same_as_value_in_your_existing_wordpress
+   MYSQL_PASSWORD=should_be_same_as_value_in_your_existing_wordpress
+   WORDPRESS_DB_NAME=should_be_same_as_value_in_your_existing_wordpress
+   WP_TABLE_PREFIX=should_be_same_as_value_in_your_existing_wordpress
+   ... 
+   ```
+
+4. Run the one-time setup script to initialize the environment:
+
+   if you are using **LOCAL** development environment:
+   ```bash
+    bash ./deployment/local/one-time-setup.sh
+   ```
+
+   if you are using **CLOUD** deployment environment:
+   ```bash
+   bash ./deployment/cloud/one-time-setup.sh
+   ```
+5. Fix permissions:
+   ```bash
+    # cd to root project directory
+    bash ./fix_permissions.sh
+   ```
+   This will ensure that the files in the `source` directory have the correct permissions to access & modify them.
+
+
+6. Import the Database: Use the WordPress CLI to import the SQL file into the MySQL container.
+   ```bash
+   # copy your SQL export file to the "source" directory
+   # cd to root project directory
+   docker compose --rm wordpress-cli db import your_database_file_name.sql
+   # if you face the issue "Plugin caching_sha2_password could not be loaded", follow the instructions in the Troubleshooting section above to fix it.
+   ```
+
+7. Remove all files & folder in the `source` directory except `wp-config.php`, just keep the `wp-config.php` file
+
+   Now you should open `tmp-source/wp-config.php` and `source/wp-config.php` to compare what is different
+
+   Move all variables & config manually from `tmp-source/wp-config.php` to `source/wp-config.php`.
+
+   After that, you can remove the `tmp-source/wp-config.php` file.
+
+   Then copy all files & folders from `tmp-source` to `source` directory.
+
+
+8. Clean data & restart the Docker containers to apply the changes:
+   ```bash
+   # cd to root project directory
+   tm -rf ./tmp-source
+   docker compose down && docker compose up -d
+   # Now this should be your new WordPress installation with all data migrated from the old one.
+   ```
