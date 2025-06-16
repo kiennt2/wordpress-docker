@@ -382,6 +382,8 @@ To transfer files & data from an existing WordPress installation to this Docker 
 
 NOTE: make sure to have the same `.env` file on both environments, especially the database credentials and WordPress
 
+We have two methods to transfer data between local and cloud environments:
+
 1. Use the `backup-to-disk.sh` script to create a backup of your WordPress site on the source environment (local or
    cloud).
 
